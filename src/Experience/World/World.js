@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import Experience from "../Experience";
+import ShaderPlane from './ShaderPlane/ShaderPlane';
 
 export default class World {
     constructor () {
@@ -12,8 +13,7 @@ export default class World {
         //others
         this.scene = this.experience.scene;
         this.resources = this.experience.resources;
-
-        this.testBox();
+        this.isLoaded = false;
 
         this.resources.on('ready', () => {
             this.loaded();
@@ -22,12 +22,12 @@ export default class World {
 
     //laod after all resources are loaded    
     loaded() {
-    }
-    testBox() {
-        this.box = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshNormalMaterial());
-        this.scene.add(this.box);
+        this.isLoaded = true;
+        this.shaderPlane = new ShaderPlane();
     }
     update() {
-        this.box.rotation.x = this.time.elapsed / 900;
+        if (this.isLoaded) {
+            this.shaderPlane.update();
+        }
     }
 }
